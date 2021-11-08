@@ -2,14 +2,103 @@ package knapsack;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 public class knapsackGA {
-
+    static int numberOfPairs;
+    static int capacity;
+    static Vector<pair<Integer, Integer>> pairs = new Vector<>();
     static double Pc = 0.7;
     static double Pm = 0.01;
     static Random rand = new Random();
-    static Vector<String> population = new Vector<>();
+    static Set<String> population = new TreeSet<>();
+    static Vector<pair<String, Integer>> fitnessValues = new Vector<>();
+    static Set<String> selectedChromosomes = new TreeSet<>();
+
+    public knapsackGA(int numberOfPairs, int capacity, Vector<pair<Integer, Integer>> pairs)
+    {
+        this.numberOfPairs = numberOfPairs;
+        this.capacity = capacity;
+        this.pairs = pairs;
+    }
+
+     static public int factorialOf(int n) {
+        if (n <= 2) {
+            return n;
+        }
+        return n * factorialOf(n - 1);
+    }
+
+    static public String generateChromosome(int numberOfPairs)
+    {
+        String chromosome = "";
+        for(int i=0; i<numberOfPairs; i++)
+        {
+              chromosome += Math.round(rand.nextDouble());
+        }
+        return chromosome;
+    }
+
+    static public int randomizePopulation(int numberOfPairs)
+    {
+        int N =  2;
+        int result = (int)(factorialOf(numberOfPairs)  * 0.01);
+        if(result > N) N = result;
+
+        return N;
+    }
+
+    static public int getWeight(String chromosome)
+    {
+        int totalWeight = 0;
+        for(int i=0; i<chromosome.length(); i++)
+        {
+            if(chromosome.charAt(i) == '1')
+            {
+                totalWeight += pairs.get(i).weight;
+            }
+        }
+        return totalWeight;
+    }
+
+    static public int getFitness(String chromosome)
+    {
+        int totalValue = 0;
+        for(int i=0; i<chromosome.length(); i++)
+        {
+            if(chromosome.charAt(i) == '1')
+            {
+                totalValue += pairs.get(i).value;
+            }
+        }
+        return totalValue;
+    }
+
+    static public void DoSelection()
+    {
+         Vector<Integer> comulative = new Vector<>();
+         int sum =0;
+         for(int i=0; i<fitnessValues.size(); i++)
+         {
+             comulative.add(sum);
+             sum+= fitnessValues.get(i).value;
+         }
+         comulative.add(sum);
+         for(int i=0; i<fitnessValues.size(); i++)
+         {
+             int r = (int) Math.floor(Math.random() * sum);
+             for(int j=0; j<comulative.size(); j++)
+             {
+                 if(r < comulative.get(j))
+                 {
+                     selectedChromosomes.add(fitnessValues.get(j-1).weight);
+                     break;
+                 }
+             }
+         }
+    }
 
     static public void DoCrossover(String chromosome1, String chromosome2) {
         int chromosomeLength = chromosome1.length();
@@ -52,11 +141,37 @@ public class knapsackGA {
             System.out.println(i);
     }
 
+    static public void DoReplacement()
+    {
+
+    }
+
+    static public void performGA()
+    {
+        int popSize = randomizePopulation(numberOfPairs);
+        while(population.size() < popSize)
+        {
+            String chromosome = generateChromosome(numberOfPairs);
+            while (getWeight(chromosome) > capacity)
+            {
+                chromosome = generateChromosome(numberOfPairs);
+            }
+            population.add(chromosome);
+            int fitness = getFitness(chromosome);
+            fitnessValues.add(new pair<>(chromosome,fitness));
+
+        }
+        DoSelection();
+
+
+    }
+
     ///testing
     public static void main(String[] args) throws IOException {
-        DoCrossover("10110", "01001");
-        DoMutation(population);
-        System.out.println("size: " + population.size());
+//        DoCrossover("10110", "01001");
+//        DoMutation(population);
+//        System.out.println("size: " + population.size());
+
 
     }
 }
