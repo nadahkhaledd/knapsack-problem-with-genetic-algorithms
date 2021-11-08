@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class files {
     static int numberOfTestcases = 0;
     static int numberOfPairs = 0;
-    static HashMap<Integer, Integer> pairs = new HashMap<>();
+    //static HashMap<Integer, Integer> pairs = new HashMap<>();
 
     public static void read() throws FileNotFoundException {
         File inputFile = new File("input.txt");
@@ -21,7 +21,5 @@ public class files {
 
     }
 
-    public static void main(String[] args) throws IOException {
 
-    }
 }
