@@ -17,8 +17,9 @@ public class knapsackGA {
         double r2 = rand.nextDouble();
         if (r2 <= Pc)
         {
+            System.out.println("\ncrossover happened");
             int r1 = (int) Math.floor(Math.random() * ((chromosomeLength - 1) - 1 + 1) + 1);  // da lw point crosssover
-            System.out.println(r1);
+            System.out.println("crossover point:" + r1);
             offspring1 = chromosome1.substring(0, r1);
             offspring1 += chromosome2.substring(r1, chromosomeLength);
 
@@ -28,8 +29,9 @@ public class knapsackGA {
         population.add(offspring1);
         population.add(offspring2);
 
-        /*for(String i : population)
-            System.out.println(i);*/
+        System.out.println("\nafter crossover:");
+        for(String i : population)
+            System.out.println(i);
     }
 
     static public void DoMutation(Vector<String> pop)
@@ -44,16 +46,17 @@ public class knapsackGA {
                 }
             }
         }
+
+        System.out.println("\nafter mutation:");
+        for(String i : population)
+            System.out.println(i);
     }
 
     ///testing
     public static void main(String[] args) throws IOException {
-        DoCrossover("10111", "01001");
+        DoCrossover("10110", "01001");
         DoMutation(population);
         System.out.println("size: " + population.size());
-        for(String i : population)
-            System.out.println(i);
-
 
     }
 }
