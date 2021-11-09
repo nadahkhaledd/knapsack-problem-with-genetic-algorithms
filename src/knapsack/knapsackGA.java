@@ -26,17 +26,17 @@ public class knapsackGA {
         offSprings = new Vector<>();
     }
 
-    public int binarySearch(Vector<Integer> comulative, int l, int r, int x) {
+    public int binarySearch(Vector<Integer> cumulative, int l, int r, int x) {
         if (r >= l) {
             int mid = l + (r - l) / 2;
 
-            if (comulative.get(mid + 1) > x && comulative.get(mid) <= x)
+            if (cumulative.get(mid + 1) > x && cumulative.get(mid) <= x)
                 return mid;
 
-            if (comulative.get(mid) > x)
-                return binarySearch(comulative, l, mid - 1, x);
+            if (cumulative.get(mid) > x)
+                return binarySearch(cumulative, l, mid - 1, x);
 
-            return binarySearch(comulative, mid + 1, r, x);
+            return binarySearch(cumulative, mid + 1, r, x);
         }
 
         return -1;
@@ -50,11 +50,11 @@ public class knapsackGA {
     }
 
     public String generateChromosome() {
-        String chromosome = "";
+        StringBuilder chromosome = new StringBuilder();
         for (int i = 0; i < numberOfPairs; i++) {
-            chromosome += Math.round(rand.nextDouble());
+            chromosome.append(Math.round(rand.nextDouble()));
         }
-        return chromosome;
+        return chromosome.toString();
     }
 
     public int getPopulation() {
@@ -86,16 +86,16 @@ public class knapsackGA {
     }
 
     public void DoSelection() {
-        Vector<Integer> comulative = new Vector<>();
+        Vector<Integer> cumulative = new Vector<>();
         int sum = 0;
-        for (int i = 0; i < fitnessValues.size(); i++) {
-            comulative.add(sum);
-            sum += fitnessValues.get(i).value;
+        for (pair<String, Integer> fitnessValue : fitnessValues) {
+            cumulative.add(sum);
+            sum += fitnessValue.value;
         }
-        comulative.add(sum);
+        cumulative.add(sum);
         for (int i = 0; i < fitnessValues.size(); i++) {
             int r = (int) Math.floor(Math.random() * sum);
-            selectedChromosomes.add(fitnessValues.get(binarySearch(comulative, 0, comulative.size() - 1, r)).key);
+            selectedChromosomes.add(fitnessValues.get(binarySearch(cumulative, 0, cumulative.size() - 1, r)).key);
         }
     }
 
@@ -128,39 +128,31 @@ public class knapsackGA {
         }
         offSprings.add(new pair<>(offspring1, getFitness(offspring1)));
         offSprings.add(new pair<>(offspring2, getFitness(offspring2)));
-
-        // System.out.println("\nafter crossover:");
-        // for(String i : offSprings)
-        //     System.out.println(i);
     }
 
     public void DoMutation() {
-        for (int i = 0; i < offSprings.size(); i++) {
-            String temp = "";
-            for (int j = 0; j < offSprings.get(i).key.length(); j++) {
+        for (pair<String, Integer> offSpring : offSprings) {
+            String temp;
+            for (int j = 0; j < offSpring.key.length(); j++) {
                 double r = rand.nextDouble();
                 if (r <= Pm) {
-                    temp = offSprings.get(i).key.substring(0, j)
-                            + (offSprings.get(i).key.charAt(j) == '0' ? '1' : '0')
-                            + offSprings.get(i).key.substring(j + 1);
+                    temp = offSpring.key.substring(0, j)
+                            + (offSpring.key.charAt(j) == '0' ? '1' : '0')
+                            + offSpring.key.substring(j + 1);
                     if (getWeight(temp) <= capacity) {
-                        offSprings.get(i).key = temp;
+                        offSpring.key = temp;
                     }
                 }
             }
         }
-
-        // System.out.println("\nafter mutation:");
-        // for(String i : offSprings)
-        //     System.out.println(i);
     }
 
     public void DoReplacement() {
         population.clear();
         fitnessValues.clear();
-        for (int i = 0; i < offSprings.size(); i++) {
-            population.add(offSprings.get(i).key);
-            fitnessValues.add(new pair<>(offSprings.get(i).key, getFitness(offSprings.get(i).key)));
+        for (pair<String, Integer> offSpring : offSprings) {
+            population.add(offSpring.key);
+            fitnessValues.add(new pair<>(offSpring.key, getFitness(offSpring.key)));
         }
         offSprings.clear();
         selectedChromosomes.clear();
@@ -193,12 +185,12 @@ public class knapsackGA {
     }
 
     public void print(String bestChromosome, int caseNumber) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         int numberOfItems = 0;
         for (int i = 0; i < bestChromosome.length(); i++) {
             if (bestChromosome.charAt(i) == '1') {
                 numberOfItems++;
-                output += pairs.get(i).key + " " + pairs.get(i).value + '\n';
+                output.append(pairs.get(i).key).append(" ").append(pairs.get(i).value).append('\n');
             }
         }
         //System.out.println("Weight = " + getWeight(bestChromosome));
@@ -210,10 +202,10 @@ public class knapsackGA {
     public String getMax() {
         String bestChromosome = "";
         int max = -1;
-        for (int i = 0; i < population.size(); i++) {
-            if (max < getFitness(population.get(i))) {
-                max = getFitness(population.get(i));
-                bestChromosome = population.get(i);
+        for (String s : population) {
+            if (max < getFitness(s)) {
+                max = getFitness(s);
+                bestChromosome = s;
             }
         }
         return bestChromosome;
