@@ -48,7 +48,7 @@ public class knapsackGA {
     {
         int N =  2;
         int result = (int)(factorialOf(numberOfPairs)  * 0.01);
-        if(result > N) N = result;
+        if(result > N) N = (result%2 == 0 ? result : result+1);
 
         return N;
     }
@@ -109,9 +109,9 @@ public class knapsackGA {
         double r2 = rand.nextDouble();
         if (r2 <= Pc)
         {
-            System.out.println("\ncrossover happened");
+//            System.out.println("\ncrossover happened");
             int r1 = (int) Math.floor(Math.random() * ((chromosomeLength - 1)) + 1);  // da lw point crosssover
-            System.out.println("crossover point:" + r1);
+//            System.out.println("crossover point:" + r1);
             offspring1 = chromosome1.substring(0, r1);
             offspring1 += chromosome2.substring(r1, chromosomeLength);
 
