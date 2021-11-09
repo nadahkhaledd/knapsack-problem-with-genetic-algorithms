@@ -8,37 +8,26 @@ import java.util.Vector;
 
 
 public class files {
-    static int numberOfTestcases = 0;
-    static int numberOfPairs = 0;
-    static Vector<pair<Integer,Integer>> pairs = new Vector<>();
-    static knapsackGA testcase = new knapsackGA();
+    int numberOfTestcases = 0;
+    int numberOfPairs = 0;
+    Vector<pair<Integer, Integer>> pairs = new Vector<>();
+    knapsackGA testcase;
 
-    public static void read() throws FileNotFoundException {
+    public void read() throws FileNotFoundException {
         File inputFile = new File("input.txt");
         Scanner reader = new Scanner(inputFile);
         numberOfTestcases = reader.nextInt();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numberOfTestcases; i++) {
             numberOfPairs = reader.nextInt();
             int capacity = reader.nextInt();
             for (int j = 0; j < numberOfPairs; j++) {
-                pairs.add( new pair(reader.nextInt(), reader.nextInt()));
+                pairs.add(new pair(reader.nextInt(), reader.nextInt()));
             }
-           // System.out.println(numberOfPairs + "\n" + capacity);
-//            for (pair p : pairs) {
-//                System.out.println(p.key + " " + p.value);
-//            }
-            testcase = new knapsackGA(numberOfPairs,capacity,pairs);
+
+            testcase = new knapsackGA(numberOfPairs, capacity, pairs);
             testcase.performGA(i + 1);
             pairs.clear();
         }
         reader.close();
-
     }
-
-    public static void main(String[] args) throws IOException {
-
-        read();
-    }
-
-
 }
