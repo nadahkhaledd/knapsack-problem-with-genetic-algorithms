@@ -10,7 +10,8 @@ import java.util.Vector;
 public class files {
     static int numberOfTestcases = 0;
     static int numberOfPairs = 0;
-    static Vector<pair> pairs = new Vector<>();
+    static Vector<pair<Integer,Integer>> pairs = new Vector<>();
+    static knapsackGA testcase;
 
     public static void read() throws FileNotFoundException {
         File inputFile = new File("input.txt");
@@ -24,8 +25,9 @@ public class files {
             }
             System.out.println(numberOfPairs + "\n" + capacity);
             for (pair p : pairs) {
-                System.out.println(p.weight + " " + p.value);
+                System.out.println(p.key + " " + p.value);
             }
+            testcase = new knapsackGA(numberOfPairs,capacity,pairs);
             pairs.clear();
         }
         reader.close();

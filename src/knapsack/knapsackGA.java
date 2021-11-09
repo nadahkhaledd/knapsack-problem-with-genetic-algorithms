@@ -31,7 +31,7 @@ public class knapsackGA {
         return n * factorialOf(n - 1);
     }
 
-    static public String generateChromosome(int numberOfPairs)
+    static public String generateChromosome()
     {
         String chromosome = "";
         for(int i=0; i<numberOfPairs; i++)
@@ -41,7 +41,7 @@ public class knapsackGA {
         return chromosome;
     }
 
-    static public int randomizePopulation(int numberOfPairs)
+    static public int randomizePopulation()
     {
         int N =  2;
         int result = (int)(factorialOf(numberOfPairs)  * 0.01);
@@ -57,7 +57,7 @@ public class knapsackGA {
         {
             if(chromosome.charAt(i) == '1')
             {
-                totalWeight += pairs.get(i).weight;
+                totalWeight += pairs.get(i).key;
             }
         }
         return totalWeight;
@@ -93,7 +93,7 @@ public class knapsackGA {
              {
                  if(r < comulative.get(j))
                  {
-                     selectedChromosomes.add(fitnessValues.get(j-1).weight);
+                     selectedChromosomes.add(fitnessValues.get(j-1).key);
                      break;
                  }
              }
@@ -148,13 +148,13 @@ public class knapsackGA {
 
     static public void performGA()
     {
-        int popSize = randomizePopulation(numberOfPairs);
+        int popSize = randomizePopulation();
         while(population.size() < popSize)
         {
-            String chromosome = generateChromosome(numberOfPairs);
+            String chromosome = generateChromosome();
             while (getWeight(chromosome) > capacity)
             {
-                chromosome = generateChromosome(numberOfPairs);
+                chromosome = generateChromosome();
             }
             population.add(chromosome);
             int fitness = getFitness(chromosome);
