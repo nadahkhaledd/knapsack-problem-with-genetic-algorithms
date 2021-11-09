@@ -17,6 +17,8 @@ public class knapsackGA {
     static Vector<pair<String, Integer>> fitnessValues = new Vector<>();
     static Set<String> selectedChromosomes = new TreeSet<>();
 
+    public knapsackGA(){}
+
     public knapsackGA(int numberOfPairs, int capacity, Vector<pair<Integer, Integer>> pairs)
     {
         this.numberOfPairs = numberOfPairs;
@@ -146,7 +148,7 @@ public class knapsackGA {
 
     }
 
-    static public void performGA()
+    public static void performGA()
     {
         int popSize = randomizePopulation();
         while(population.size() < popSize)
@@ -162,7 +164,6 @@ public class knapsackGA {
 
         }
         DoSelection();
-
 
     }
 

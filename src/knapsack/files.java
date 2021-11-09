@@ -11,7 +11,7 @@ public class files {
     static int numberOfTestcases = 0;
     static int numberOfPairs = 0;
     static Vector<pair<Integer,Integer>> pairs = new Vector<>();
-    static knapsackGA testcase;
+    static knapsackGA testcase = new knapsackGA();
 
     public static void read() throws FileNotFoundException {
         File inputFile = new File("input.txt");
@@ -28,6 +28,7 @@ public class files {
                 System.out.println(p.key + " " + p.value);
             }
             testcase = new knapsackGA(numberOfPairs,capacity,pairs);
+            //call performGA()
             pairs.clear();
         }
         reader.close();
