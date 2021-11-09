@@ -15,7 +15,8 @@ public class knapsackGA {
     static Random rand = new Random();
     static Set<String> population = new TreeSet<>();
     static Vector<pair<String, Integer>> fitnessValues = new Vector<>();
-    static Set<String> selectedChromosomes = new TreeSet<>();
+    static Vector<String> selectedChromosomes = new Vector<>();
+    static Vector<pair<String, Integer>> offSprings = new Vector<>();
 
     public knapsackGA(){}
 
@@ -109,7 +110,7 @@ public class knapsackGA {
         if (r2 <= Pc)
         {
             System.out.println("\ncrossover happened");
-            int r1 = (int) Math.floor(Math.random() * ((chromosomeLength - 1) - 1 + 1) + 1);  // da lw point crosssover
+            int r1 = (int) Math.floor(Math.random() * ((chromosomeLength - 1)) + 1);  // da lw point crosssover
             System.out.println("crossover point:" + r1);
             offspring1 = chromosome1.substring(0, r1);
             offspring1 += chromosome2.substring(r1, chromosomeLength);
@@ -117,35 +118,35 @@ public class knapsackGA {
             offspring2 = chromosome2.substring(0, r1);
             offspring2 += chromosome1.substring(r1, chromosomeLength);
         }
-        population.add(offspring1);
-        population.add(offspring2);
+        offSprings.add(new pair<>(offspring1,getFitness(offspring1)));
+        offSprings.add(new pair<>(offspring2,getFitness(offspring2)));
 
-        System.out.println("\nafter crossover:");
-        for(String i : population)
-            System.out.println(i);
+        // System.out.println("\nafter crossover:");
+        // for(String i : offSprings)
+        //     System.out.println(i);
     }
 
-    static public void DoMutation(Vector<String> pop)
+    static public void DoMutation()
     {
-        for (String p : pop) {
-            for (int i = 0; i < p.length(); i++) {
+        for (int i=0; i<offSprings.size(); i++) {
+            for (int j = 0; j < offSprings.get(j).key.length(); j++) {
                 double r = rand.nextDouble();
                 if (r <= Pm)
                 {
-                    p.replace(p.charAt(i), (char) (Character.getNumericValue(p.charAt(i)) == 0 ? 1 : 0));
+                    offSprings.get(j).key.replace(offSprings.get(j).key.charAt(i), (char) (Character.getNumericValue(offSprings.get(j).key.charAt(i)) == 0 ? 1 : 0));
 
                 }
             }
         }
 
-        System.out.println("\nafter mutation:");
-        for(String i : population)
-            System.out.println(i);
+        // System.out.println("\nafter mutation:");
+        // for(String i : offSprings)
+        //     System.out.println(i);
     }
 
     static public void DoReplacement()
     {
-
+        
     }
 
     public static void performGA()
@@ -161,9 +162,13 @@ public class knapsackGA {
             population.add(chromosome);
             int fitness = getFitness(chromosome);
             fitnessValues.add(new pair<>(chromosome,fitness));
-
         }
         DoSelection();
+        for(int i=0; i<selectedChromosomes.size(); i+=2){
+            DoCrossover(selectedChromosomes.get(i), selectedChromosomes.get(i+1));
+        }
+        DoMutation();
+        DoReplacement();
 
     }
 
